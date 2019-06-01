@@ -46,7 +46,7 @@
 	</style>
 
 	<!-- Theme used for syntax highlighting of code -->
-	<link rel="stylesheet" href="lib/css/monokai.css">
+	<link rel="stylesheet" href="lib/css/zenburn.css">
 
 	<!-- Printing and PDF exports -->
 	<script>
@@ -92,82 +92,159 @@
 			</section>
 			<section>
 				<h2>Introduction</h2>
+				<section>
+					<h5>We are building knowledge graphs, mainly based on tourism data</h5>
+					<p>Tyrolean Tourism Knowledge Graph</p>
+					<p>MindLab</p>
+				</section>
+				<section>
+					<p>We get the data from various (mostly) propriatery sources, typically in JSON or XML format</p>
+					<p>Then, we map them to schema.org</p>
+					<p>The generated RDF feeds the knowledge graphs and websites as semantic annotations</p>
+				</section>
+				<section>
+					<p>We needed a scalable mapping solution</p>
+					<p>We looked around, made some preliminary tests and found RML very suitable for this task</p>
+					<p>But soon we faced some challenges due to our uses cases, so we decided to implement a new mapper
+					</p>
+				</section>
 			</section>
 
 			<section>
 				<h2>Motivation</h2>
-				put the example in the paper here
-			</section>
+				<section>
+					We need to...
+					<ul>
+						<li>handle large files (>500 MB)</li>
+						<li><strong>work with nested objects that do not have any fields to join</strong></li>
+					</ul>
+				</section>
+				<section>
+					<pre><code class="json" data-trim data-noescape>
+								[{
+									"name":"Gschwandtkopflifte",
+									"type":"SkiResort",
+									"contactDetails":[
+									{
+									"address":{
+									"street":"Gschwandtkopf 700",
+									"postcode":"6100",
+									"city":"Seefeld",
+									"type":"Office"
+									}
+									},
+									{
+									"address":{
+									"street":"Gschwandtkopf 702",
+									"postcode":"6100",
+									"city":"Seefeld",
+									"type":"Lifte"
+									}
+									}
+									]
+									}]
+							</code></pre>
 
-			<section>
-				<h2>Tool</h2>
-				<section>
-					<h2>Limitations</h2>
-					no named graph
-					no joins
-					javascript functions
-				</section>
-				<section>
-					<h2>Customizations</h2>
-				</section>
-				<section>
-					<h2>Performance Tests</h2>
-					test conditions
-					what was compared
-					screenshots of Graphs
 				</section>
 			</section>
 			<section>
-				<h2>RML Test Cases</h2>
-				<p>all tests passed except the ones about Named Graphs and joining two files</p>
-			</section>
-			<section>
+				
+				<section>
+					<h2>Tool</h2>
+					<h3>Limitations</h3>
+					<p>Only XML and JSON as source format (CSV support is coming)</p>
+					<p>No Named Graphs</p>
+					<p>No JOIN Support</p>
+					<p>Only javascript functions</p>
+				</section>
+				<section>
+					<h2>Tool</h2>
+					<h3>Customizations</h3>
+					<h4>New Iterator Behaviour</h4>
+					<img src="images/custom_iterator.png" style="width: 600px;">
+				</section>
+				<section>
+						<h2>Tool</h2>
+						<h3>Customizations</h3>
+						<h4>Global Language Tags</h4>
+						<p>The language tag can be given to the mapper as an option and this tag then applied all mapped string literals</p>
+						<p>Particularly useful for data from the tourism sector</p>
+
+					</section>
+				<section>
+					<h2>Tool</h2>
+					<h3>Performance Tests</h3>
 					<section>
+							<img src="images/rml-json-input.png" style="width: 600px; margin-top: 50px;">
+					</section>
+				</section>
+				<section>
+					<h2>Tool</h2>
+					<h3>Performance Tests</h3>		
+						<section>
+								<img src="images/rml-xml-input.png" style="width: 600px; margin-top: 50px;">
+						</section>
+					</section>
+			</section>
+			<section data-background-iframe="https://docs.google.com/spreadsheets/d/1BRo9iI2yGfokYEcH2QUHcQnIdI9WKZvAs9GvYYqQSs0/edit#gid=0" data-background-interactive>
+				<div
+				style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+				<h2>RML Test Cases</h2>
+				<p>All <strong>applicable tests</strong> <a href="https://docs.google.com/spreadsheets/d/1BRo9iI2yGfokYEcH2QUHcQnIdI9WKZvAs9GvYYqQSs0/edit#gid=0" target="_blank">passed</a>.</p>
+			</div>
+			</section>
+			<section>
+				<section>
 					<h2>New Implementation with Joins</h2>
 					<p>Implementing joins affected the performance drastically.</p>
-					</section>
-					<section>
-							<h2>New Implementation with Joins</h2>
-						<section id="fragments">
-							<p class="fragment">So we did some optimizations</p>
-							<ul>
-								<li class="fragment">Iterator results are cached for reuse</li>
-								<li class="fragment">objects in the source for each TripleMaps are iterated once.
-									When it comes to joining two objects, only the cached values for join condition
-									references (parent and child) are compared</li>
-								<li class="fragment">this spares the time for evaluating iterators for each mapping
-									during joins</li>
-							</ul>
-						</section>
-					</section>
-					
 				</section>
 				<section>
-					<h2>Comparison with other RML Implementations</h2>
-					<section>
-							<img src="images/json-rml-comp.png">
-						</section>
-						<section>
-						<img src="images/xml-rml-comp.png">
-							</section>
-				</section>
-				<section>
-					<h2>Comparison with Other RDF Generation Tools</h2>
-					<section>
-					<img src="images/json-big-comp.png">
-				</section>
-				<section>
-				<img src="images/xml-big-comp.png">
+					<h2>New Implementation with Joins</h2>
+					<section id="fragments">
+						<p class="fragment">So we did some optimizations</p>
+						<ul>
+							<li class="fragment">Iterator results are cached for reuse</li>
+							<li class="fragment">Objects in the logical source for each TripleMaps are iterated
+								once.
+								When it comes to joining two objects, only the cached values for join condition
+								references (parent and child) are compared</li>
+							<li class="fragment">this spares the time spent for evaluating iterators for each
+								mapping 
+								during join operation</li>
+						</ul>
 					</section>
 				</section>
-				<section data-background-iframe="https://semantifyit.github.io/RocketRML/" data-background-interactive>
-					<div
-						style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
-						<h2>Source Code</h2>
-						<p></p>
-					</div>
+
+			</section>
+			<section>
+				<h2>Comparison with other RML Implementations</h2>
+				<section>
+					<img src="images/json-rml-comp.png" style="width: 700px; margin-top: 150px;">
 				</section>
-			
+				<section>
+					<img src="images/xml-rml-comp.png" style="width: 700px; margin-top: 150px;">
+				</section>
+			</section>
+			<section>
+				<h2>Comparison with Other RDF Generation Tools</h2>
+				<section>
+					<img src="images/json-big-comp.png" style="width: 700px; margin-top: 150px;">
+				</section>
+				<section>
+					<img src="images/xml-big-comp.png" style="width: 700px; margin-top: 150px;">
+				</section>
+			</section>
+			<section data-background-iframe="https://semantifyit.github.io/RocketRML/" data-background-interactive>
+				<div
+					style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+					<h2>Source Code on GitHub</h2>
+					<h4>Also available as NPM package and integrated with <a href="https://semantify.it"
+							target="_blank">semantify.it</a></h4>
+
+					<p></p>
+				</div>
+			</section>
+
 
 			<!-- Example of nested vertical slides -->
 			<section>
@@ -183,7 +260,8 @@
 				</section>
 				<section>
 					<h2>Basement Level 1</h2>
-					<p>Nested slides are useful for adding additional detail underneath a high level horizontal slide.
+					<p>Nested slides are useful for adding additional detail underneath a high level horizontal
+						slide.
 					</p>
 				</section>
 				<section>
@@ -201,7 +279,8 @@
 			<section>
 				<h2>Slides</h2>
 				<p>
-					Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out
+					Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it
+					out
 					at <a href="https://slides.com" target="_blank">https://slides.com</a>.
 				</p>
 			</section>
@@ -212,8 +291,10 @@
 					Press <strong>ESC</strong> to enter the slide overview.
 				</p>
 				<p>
-					Hold down the <strong>alt</strong> key (<strong>ctrl</strong> in Linux) and click on any element to
-					zoom towards it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Click again to zoom back
+					Hold down the <strong>alt</strong> key (<strong>ctrl</strong> in Linux) and click on any element
+					to
+					zoom towards it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Click again to zoom
+					back
 					out.
 				</p>
 				<p>
@@ -224,7 +305,8 @@
 			<section>
 				<h2>Touch Optimized</h2>
 				<p>
-					Presentations look great on touch devices, like mobile phones and tablets. Simply swipe through your
+					Presentations look great on touch devices, like mobile phones and tablets. Simply swipe through
+					your
 					slides.
 				</p>
 			</section>
@@ -331,12 +413,13 @@
 						onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
 				</p>
 			</section>
-
+			
 			<section>
 				<section data-background="#dddddd">
 					<h2>Slide Backgrounds</h2>
 					<p>
-						Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS
+						Set <code>data-background="#dddddd"</code> on a slide to change the background color. All
+						CSS
 						color formats are supported.
 					</p>
 					<a href="#" class="navigate-down">
@@ -387,7 +470,8 @@
 				<div
 					style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
 					<h2>Iframe Backgrounds</h2>
-					<p>Since reveal.js runs on the web, you can easily embed other web content. Try interacting with the
+					<p>Since reveal.js runs on the web, you can easily embed other web content. Try interacting with
+						the
 						page in the background.</p>
 				</div>
 			</section>
@@ -472,9 +556,11 @@ function Example() {
 				</p>
 				<blockquote
 					cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-					&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of
+					&ldquo;For years there has been a theory that millions of monkeys typing at random on millions
+					of
 					typewriters would
-					reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
+					reproduce the entire works of Shakespeare. The Internet has proven this theory to be
+					untrue.&rdquo;
 				</blockquote>
 			</section>
 
@@ -488,19 +574,22 @@ function Example() {
 
 			<section>
 				<h2>Speaker View</h2>
-				<p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes
+				<p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It
+					includes
 					a timer, preview of the upcoming slide as well as your speaker notes.</p>
 				<p>Press the <em>S</em> key to try it out.</p>
 
 				<aside class="notes">
-					Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you
+					Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if
+					you
 					open the speaker notes window (hit 's' on your keyboard).
 				</aside>
 			</section>
 
 			<section>
 				<h2>Export to PDF</h2>
-				<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>,
+				<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to
+						PDF</a>,
 					here's an example:</p>
 				<iframe data-src="https://www.slideshare.net/slideshow/embed_code/42840540" width="445" height="355"
 					frameborder="0" marginwidth="0" marginheight="0" scrolling="no"
@@ -532,7 +621,8 @@ Reveal.addEventListener( 'customevent', function() {
 			<section>
 				<h2>Take a Moment</h2>
 				<p>
-					Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage and
+					Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage
+					and
 					want to take distracting slides off the screen.
 				</p>
 			</section>
@@ -543,8 +633,10 @@ Reveal.addEventListener( 'customevent', function() {
 					<li>Right-to-left support</li>
 					<li><a href="https://github.com/hakimel/reveal.js#api">Extensive JavaScript API</a></li>
 					<li><a href="https://github.com/hakimel/reveal.js#auto-sliding">Auto-progression</a></li>
-					<li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a></li>
-					<li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard bindings</a>
+					<li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a>
+					</li>
+					<li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard
+							bindings</a>
 					</li>
 				</ul>
 			</section>
@@ -571,7 +663,7 @@ Reveal.addEventListener( 'customevent', function() {
 			progress: true,
 			center: true,
 			hash: true,
-
+			slideNumber: 'c/t',
 			transition: 'slide', // none/fade/slide/convex/concave/zoom
 
 			// More info https://github.com/hakimel/reveal.js#dependencies
